@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Angular-recorder by logbon72</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Angular-recorder</h1>
+      <h2 class="project-tagline">Pure Angular js recorder which will support both Flash and HTML5</h2>
+      <a href="https://github.com/logbon72/angular-recorder" class="btn">View on GitHub</a>
+      <a href="https://github.com/logbon72/angular-recorder/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/logbon72/angular-recorder/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="angular-audio-recorder" class="anchor" href="#angular-audio-recorder" aria-hidden="true"><span class="octicon octicon-link"></span></a>Angular Audio Recorder</h1>
+
+<p>This is an AngularJS plugin for recording audio input. The directive uses one of the following internally:</p>
+
+<ul>
+<li>
+<a href="https://github.com/apache/cordova-plugin-media">Cordova Media Plugin</a> when wrapped in a Cordova application.</li>
+<li>HTML5 <code>navigator.*getUserMedia()</code> and <a href="https://github.com/mattdiamond/Recorderjs">RecorderJS</a> when available</li>
+<li>Falls back to <a href="https://github.com/michalstocki/FlashWavRecorder">FlashWaveRecorder</a> in web browsers that do not support <code>*getUserMedia()</code>.</li>
+</ul>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>To install via Bower, simply do the following:</p>
+
+<div class="highlight highlight-source-shell"><pre>bower install angularAudioRecorder</pre></div>
+
+<p><strong>NOTICE:</strong> When using Cordova, the Media plugin is required, see <a href="https://github.com/apache/cordova-plugin-media">Cordova Media Plugin</a> for details on Installation.</p>
+
+<h2>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h2>
+
+<p>See the <a href="demo">demo</a> directory for a simple demo.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>The Audio recorder is a directive and it can be used as an attribute or an element (preffered).</p>
+
+<p>The general structure is :</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">ng</span><span class="pl-e">-audio-recorder</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">'</span>audioInput<span class="pl-pds">'</span></span> <span class="pl-e">audio-model</span>=<span class="pl-s"><span class="pl-pds">'</span>recordedInput<span class="pl-pds">'</span></span>&gt;
+  <span class="pl-c">&lt;!-- Start controls, exposed via recorder--&gt;</span>
+  &lt;<span class="pl-ent">div</span> <span class="pl-e">ng-if</span>=<span class="pl-s"><span class="pl-pds">"</span>recorder.isAvailable<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">button</span> <span class="pl-e">ng-click</span>=<span class="pl-s"><span class="pl-pds">"</span>recorder.startRecord()<span class="pl-pds">"</span></span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>button<span class="pl-pds">"</span></span> <span class="pl-e">ng-disabled</span>=<span class="pl-s"><span class="pl-pds">"</span>recorder.status.isRecording<span class="pl-pds">"</span></span>&gt;
+        Start Record
+    &lt;/<span class="pl-ent">button</span>&gt;
+    &lt;<span class="pl-ent">button</span> <span class="pl-e">ng-click</span>=<span class="pl-s"><span class="pl-pds">"</span>recorder.stopRecord()<span class="pl-pds">"</span></span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>button<span class="pl-pds">"</span></span> <span class="pl-e">ng-disabled</span>=<span class="pl-s"><span class="pl-pds">"</span>recorder.status.isRecording === false<span class="pl-pds">"</span></span>&gt;
+        Stop Record
+    &lt;/<span class="pl-ent">button</span>&gt;
+    &lt;<span class="pl-ent">button</span> <span class="pl-e">ng-click</span>=<span class="pl-s"><span class="pl-pds">"</span>recorder.playbackRecording()<span class="pl-pds">"</span></span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>button<span class="pl-pds">"</span></span>
+            <span class="pl-e">ng-disabled</span>=<span class="pl-s"><span class="pl-pds">"</span>recorder.status.isRecording || !recorder.audioModel<span class="pl-pds">"</span></span>&gt;
+        Play Back
+    &lt;/<span class="pl-ent">button</span>&gt;
+  &lt;/<span class="pl-ent">div</span>&gt;
+
+  &lt;<span class="pl-ent">div</span> <span class="pl-e">ng-if</span>=<span class="pl-s"><span class="pl-pds">"</span>!recorder.isAvailable<span class="pl-pds">"</span></span>&gt;
+    Message for users when recording is not possible.
+  &lt;/<span class="pl-ent">div</span>&gt;
+  <span class="pl-c">&lt;!-- End controls--&gt;</span>
+&lt;/<span class="pl-ent">ng</span><span class="pl-e">-audio-recorder</span>&gt;</pre></div>
+
+<h2>
+<a id="api-reference" class="anchor" href="#api-reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>API Reference</h2>
+
+<p>The following API are exposed to your application.</p>
+
+<h3>
+<a id="provider-recorderserviceprovider" class="anchor" href="#provider-recorderserviceprovider" aria-hidden="true"><span class="octicon octicon-link"></span></a>Provider <code>recorderServiceProvider</code>
+</h3>
+
+<p>This is the provider for configuring the <code>recorderService</code>.</p>
+
+<ul>
+<li>
+<code>recorderServiceProvider.forceSwf(boolean value)</code>: This method can be used to force the plugin to use SWF for Audio input.</li>
+</ul>
+
+<h3>
+<a id="service-recorderservice" class="anchor" href="#service-recorderservice" aria-hidden="true"><span class="octicon octicon-link"></span></a>Service <code>recorderService</code>
+</h3>
+
+<p>This service is used internally by the directive, even though it's exposed to your application, there is no guarantee on its behaviour.</p>
+
+<ul>
+<li>
+<code>(boolean) recorderService.isReady</code>: field indicating the recorder is ready.</li>
+<li>
+<code>(boolean) recorderService.isHtml5</code>: field indicating the recorder is using HTML5 internally.</li>
+<li>
+<code>(boolean) recorderService.isCordova</code>: field indicating the recorder is using Cordova Media.</li>
+<li>
+<code>(boolean) recorderService.isAvailable()</code>: method that indicates if recording is available or not. When this returns false, it implies that none of the methods above could be used to record.</li>
+<li>
+<code>(Object) recorderService.getHandler()</code>: returns the current handler being used internally.</li>
+<li>
+<code>recorderService.showPermission(options)</code>: This method is used to request for user permission to use the Microphone (Flash &amp; HTML5). The options is a list of callbacks to be called for various events:
+
+<ul>
+<li>onAllowed: callback to call when user grants permission.</li>
+<li>onDenied: callback to call when user denies permission.</li>
+<li>onClosed: callback to call when a user closes the permission window (Flash).</li>
+</ul>
+</li>
+</ul>
+
+<p>The callbacks do not accept any arguments.</p>
+
+<h3>
+<a id="directive-ngaudiorecorder" class="anchor" href="#directive-ngaudiorecorder" aria-hidden="true"><span class="octicon octicon-link"></span></a>Directive <code>ngAudioRecorder</code>
+</h3>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">ng</span><span class="pl-e">-audio-recorder</span> <span class="pl-e">attributes</span>...&gt;&lt;/<span class="pl-ent">ng</span><span class="pl-e">-audio-recorder</span>&gt;</pre></div>
+
+<p>This is probably the only component which you will interact with when using this application, it can be used as an element (preffered) or as an attribute. The directive takes in the following attributes:</p>
+
+<ul>
+<li>
+<code>audio-model</code>: the model within your controller to bind the recorded audio message to. The recorded message is a Blob.</li>
+<li>
+<code>id</code>: A unique identifier for your input.</li>
+<li>
+<code>show-player</code>: Indicates if the audio player should be shown after recording is stopped.</li>
+<li>
+<code>auto-start</code>: indicates if the recording should be started automatically.</li>
+<li>
+<code>on-record-start</code>: callback to call when recording is started.</li>
+<li>
+<code>on-record-complete</code>: callback to call when recording is complete.</li>
+<li>
+<code>on-playback-start</code>: callback to call when playback is started.</li>
+<li>
+<code>on-playback-complete</code>: callback to call when playback is completed.</li>
+</ul>
+
+<h3>
+<a id="controller-ngaudiorecordercontroller" class="anchor" href="#controller-ngaudiorecordercontroller" aria-hidden="true"><span class="octicon octicon-link"></span></a>Controller <code>ngAudioRecorderController</code>
+</h3>
+
+<p>The controller for the <code>ngAudioRecorder</code> directive is exposed to your template (within the directive element) as an object <code>recorder</code> which can be used to control the recording and the playback.</p>
+
+<p>The controller exposes the following :</p>
+
+<ul>
+<li>
+<code>recorder.startRecording()</code>: starts audio recording, might request permission if the user is yet to grant permission to the application.</li>
+<li>
+<code>recorder.stopRecording()</code>: stops an ongoing recording and sets the audio model.</li>
+<li>
+<code>recorder.playbackRecording()</code>: Plays the recorded message if available.</li>
+<li>
+<code>recorder.save()</code>: Triggers download of the recorded audio file.</li>
+<li>
+<code>(boolean) recorder.status.isRecording</code>: variable indicating if audio record is in progress.</li>
+<li>
+<code>(boolean) recorder.isHtml5()</code>: indicates if HTML5 recording is being used.</li>
+<li>
+<code>(boolean | null) recorder.isDenied</code>: variable indicating if the permission to use audio device was denied. This is set to <code>null</code> when permission is yet to be requested.</li>
+<li>
+<code>(long) recorder.elapsedTime</code> : The total time elapsed so far while recording, updated every second.</li>
+<li>
+<code>(boolean) recorder.isAvailable</code>: variable indicating if audio recording is available.</li>
+</ul>
+
+<h3>
+<a id="directive-ngaudiorecorderanalyzer" class="anchor" href="#directive-ngaudiorecorderanalyzer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Directive <code>ngAudioRecorderAnalyzer</code>
+</h3>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">ng</span><span class="pl-e">-audio-recorder-analyzer</span>&gt;&lt;/<span class="pl-ent">ng</span><span class="pl-e">-audio-recorder-analyzer</span>&gt;</pre></div>
+
+<p>This directive displays audio input analysis during recording, <a href="http://webaudiodemos.appspot.com/AudioRecorder/index.html">see here</a> for example of what an analyzer looks like.  </p>
+
+<p>Please note this directive is only available in HTML5 mode.</p>
+
+<h3>
+<a id="directive-ngaudiorecorderwaveview" class="anchor" href="#directive-ngaudiorecorderwaveview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Directive <code>ngAudioRecorderWaveView</code>
+</h3>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">ng</span><span class="pl-e">-audio-recorder-wave-view</span> <span class="pl-e">attributes</span>&gt;&lt;/<span class="pl-ent">ng</span><span class="pl-e">-audio-recorder-wave-view</span>&gt;</pre></div>
+
+<p>This directive displays the wave form of the recorded audio, <a href="http://webaudiodemos.appspot.com/AudioRecorder/index.html">see here</a> for example of what an the wave form looks like.  </p>
+
+<p>Please note this directive is only available in HTML5 mode.</p>
+
+<p>The following attributes can be specified:</p>
+
+<ul>
+<li>
+<code>wave-color</code>: The color of the color of the wave form, defaults to <code>'silver'</code>.</li>
+<li>
+<code>bar-color</code>: The color of the current play position bar, defaults to <code>'green'</code>
+</li>
+<li>
+<code>bar-width</code>: The width in space units of the position bar, defaults to 1.</li>
+</ul>
+
+<h2>
+<a id="credits" class="anchor" href="#credits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credits</h2>
+
+<ul>
+<li>This Repo was originally forked from <a href="https://github.com/sathyapulse/angular-recorder">https://github.com/sathyapulse/angular-recorder</a> the structural changes were too much, I had to create a new project off it.</li>
+<li><a href="https://github.com/mattdiamond/Recorderjs">RecorderJS</a></li>
+<li><a href="https://github.com/michalstocki/FlashWavRecorder">FlashWaveRecorder</a></li>
+<li><a href="https://github.com/apache/cordova-plugin-media">Cordova Media Plugin</a></li>
+<li>
+<a href="https://github.com/cwilso/AudioRecorder">Web Audio Demo</a> by <a href="https://github.com/cwilso">Chris Wilson</a>
+</li>
+</ul>
+
+<h2>
+<a id="license-mit" class="anchor" href="#license-mit" aria-hidden="true"><span class="octicon octicon-link"></span></a>License (MIT)</h2>
+
+<p>Copyright © 2015</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/logbon72/angular-recorder">Angular-recorder</a> is maintained by <a href="https://github.com/logbon72">logbon72</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
