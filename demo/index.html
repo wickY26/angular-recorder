@@ -2,68 +2,108 @@
 
 <head>
     <title>Demo for Audio Recorder</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/master/lib/html5-recorder.js?v=20151021.1"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/master/lib/flash-recorder.js?v=20151021.1"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/master/audio-recorder.js?v=20151021.1"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/293c22ea795db989ba489e9fab33b53af3aba161/lib/html5-recorder.js"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/293c22ea795db989ba489e9fab33b53af3aba161/lib/flash-recorder.js?v=20151021.1"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/293c22ea795db989ba489e9fab33b53af3aba161/audio-recorder.js?v=20151021.1"></script>
     <script src="demo.js"></script>
+
+    <style>
+        canvas {
+            display: inline-block;
+            background: #202020;
+            width: 100%;
+            /*height: 45%;*/
+            height: 300px;
+            box-shadow: 0px 0px 10px blue;
+        }
+
+        .float-rt {
+            float: right;
+        }
+
+    </style>
 </head>
 
-<body ng-app="recorderDemo" ng-cloak="">
+<body ng-app="recorderDemo" ng-cloak="" style="font-family: sans-serif">
 <div ng-controller='DemoController'>
-    <h1>Welcome to Recorder Demo </h1>
+    <h1 class="text-center">Welcome to Recorder Demo </h1>
 
-    <ng-audio-recorder id="mainAudio" audio-model="recorded">
+    <div ng-audio-recorder id="mainAudio" audio-model="recorded" class="container">
         <div ng-if="recorder.isAvailable">
 
-            <div ng-if="recorder.isHtml5()">
-                <i>Using HTML5</i>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span ng-if="recorder.isHtml5()">
+                            Using HTML5 <a href="?forceFlash" class="btn btn-default btn-sm float-rt">Use FLASH</a>
+                        </span>
+
+                        <span ng-if="!recorder.isHtml5()">
+                            Using FLASH <a href="?" class="btn btn-default btn-sm float-rt">Use Default</a>
+                        </span>
+                    </h3>
+
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="panel-body">
+                    <div>
+                        <div>
+                            <h3 style="float: right; font-family: sans-serif; text-align: center; width: 50px; border-radius: 30px; border: solid 2px #333; padding: 10px; margin: 0; background: #337ab7; color: #fff;"
+                                ng-if="recorder.status.isRecording">
+                                {{recorder.elapsedTime >= 10 ? recorder.elapsedTime : ('0'+recorder.elapsedTime)}}
+                            </h3>
+
+                            <div class="controls text-center" style="padding-top: 10px;">
+                                <button ng-click="recorder.status.isRecording ? recorder.stopRecord() : recorder.startRecord()"  type="button" class="btn" ng-class="{'btn-primary': !recorder.status.isRecording, 'btn-danger': recorder.status.isRecording}">
+                                    <i class="glyphicon glyphicon-record"></i> {{recorder.status.isRecording ? 'Stop' :
+                                    'Start'}} Recording
+                                </button>
+
+                                <button class="btn btn-primary" ng-click="recorder.playbackRecording()" type="button"
+                                        ng-disabled="recorder.status.isRecording || !recorder.audioModel">
+                                    <i class="glyphicon glyphicon-play"></i> Play
+                                </button>
+
+                                <button class="btn btn-success" ng-click="recorder.save()"
+                                        ng-disabled="recorder.status.isRecording || !recorder.audioModel">
+                                    <i class="glyphicon glyphicon-download"></i> Download
+                                </button>
+
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    </div>
+                    <br/>
+
+                    <div class="panels" canvas-sizer>
+                        <div ng-show="recorder.status.isRecording">
+                            <ng-audio-recorder-analyzer></ng-audio-recorder-analyzer>
+                        </div>
+
+                        <div ng-show="!recorder.status.isRecording && recorder.audioModel">
+                            <ng-audio-recorder-wave-view wave-color="yellow"
+                                                         bar-color="red"></ng-audio-recorder-wave-view>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div ng-if="!recorder.isHtml5()">
-                <i>Using Flash</i>
-            </div>
-
-            <button ng-click="recorder.startRecord()" type="button" ng-disabled="recorder.status.isRecording">
-                Start Record
-            </button>
-            <button ng-click="recorder.stopRecord()" type="button" ng-disabled="recorder.status.isRecording === false">
-                Stop Record
-            </button>
-            <button ng-click="recorder.playbackRecording()" type="button"
-                    ng-disabled="recorder.status.isRecording || !recorder.audioModel">
-                Play Back
-            </button>
-
-            <button ng-click="recorder.save()" ng-disabled="recorder.status.isRecording || !recorder.audioModel">
-                Download
-            </button>
-
-            <div ng-show="recorder.status.isRecording">
-                <ng-audio-recorder-analyzer></ng-audio-recorder-analyzer>
-            </div>
-            <br/>
-
-            <div ng-show="!recorder.status.isRecording && recorder.audioModel">
-                <ng-audio-recorder-wave-view wave-color="yellow" bar-color="red"></ng-audio-recorder-wave-view>
-            </div>
-            <br/>
-
-            <h2 style="font-family: sans-serif; text-align: center; width: 60px; border-radius: 20px;
-        border: solid 2px #333; padding: 20px 10px;" ng-if="recorder.status.isRecording">
-                {{recorder.elapsedTime > 10 ? recorder.elapsedTime : ('0'+recorder.elapsedTime)}}
-            </h2>
 
         </div>
 
 
-        <div ng-if="!recorder.isAvailable">
+        <div ng-if="!recorder.isAvailable" class="alert alert-warning">
             Your browser does not support this feature natively, please use latest version of <a
                 href="https://www.google.com/chrome/browser" target="_blank">Google Chrome</a> or <a
                 href="https://www.mozilla.org/en-US/firefox/new/" target="_blank">Mozilla Firefox</a>. If you're on
             Safari or Internet Explorer, you can install <a href="https://get.adobe.com/flashplayer/">Adobe Flash</a> to
             use this feature.
         </div>
-    </ng-audio-recorder>
+    </div>
 
 </div>
 </body>
