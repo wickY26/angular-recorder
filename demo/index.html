@@ -4,9 +4,9 @@
     <title>Demo for Audio Recorder</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/293c22ea795db989ba489e9fab33b53af3aba161/lib/html5-recorder.js"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/293c22ea795db989ba489e9fab33b53af3aba161/lib/flash-recorder.js?v=20151021.1"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/293c22ea795db989ba489e9fab33b53af3aba161/audio-recorder.js?v=20151021.1"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/e614a3990a5d422663df3f7c491ff52c7072d2ed/lib/html5-recorder.js"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/e614a3990a5d422663df3f7c491ff52c7072d2ed/lib/flash-recorder.js?v=20151021.1"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/e614a3990a5d422663df3f7c491ff52c7072d2ed/audio-recorder.js?v=20151021.1"></script>
     <script src="demo.js"></script>
 
     <style>
@@ -58,14 +58,25 @@
                             </h3>
 
                             <div class="controls text-center" style="padding-top: 10px;">
-                                <button ng-click="recorder.status.isRecording ? recorder.stopRecord() : recorder.startRecord()"  type="button" class="btn" ng-class="{'btn-primary': !recorder.status.isRecording, 'btn-danger': recorder.status.isRecording}">
+                                <button ng-click="recorder.status.isRecording ? recorder.stopRecord() : recorder.startRecord()"
+                                        type="button" class="btn"
+                                        ng-class="{'btn-primary': !recorder.status.isRecording, 'btn-danger': recorder.status.isRecording}">
                                     <i class="glyphicon glyphicon-record"></i> {{recorder.status.isRecording ? 'Stop' :
                                     'Start'}} Recording
                                 </button>
 
-                                <button class="btn btn-primary" ng-click="recorder.playbackRecording()" type="button"
+                                <button class="btn"
+                                        ng-class="{'btn-primary': (recorder.status.isPaused || recorder.status.isStopped), 'btn-warning': recorder.status.isPlaying}"
+                                        ng-click="recorder.status.isPlaying ? recorder.playbackPause() : recorder.playbackResume()"
+                                        type="button"
                                         ng-disabled="recorder.status.isRecording || !recorder.audioModel">
-                                    <i class="glyphicon glyphicon-play"></i> Play
+                                    <span ng-if="recorder.status.isPaused || recorder.status.isStopped">
+                                        <i class="glyphicon glyphicon-play"></i> Play
+                                    </span>
+
+                                    <span ng-if="recorder.status.isPlaying">
+                                        <i class="glyphicon glyphicon-pause"></i> Pause
+                                    </span>
                                 </button>
 
                                 <button class="btn btn-success" ng-click="recorder.save()"
