@@ -3,9 +3,9 @@
 <head>
     <title>Demo for Audio Recorder</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/master/lib/html5-recorder.js"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/master/lib/flash-recorder.js"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/master/audio-recorder.js"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/master/lib/html5-recorder.js?v=20151021.1"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/master/lib/flash-recorder.js?v=20151021.1"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/master/audio-recorder.js?v=20151021.1"></script>
     <script src="demo.js"></script>
 </head>
 
@@ -15,6 +15,13 @@
 
     <ng-audio-recorder id="mainAudio" audio-model="recorded">
         <div ng-if="recorder.isAvailable">
+
+            <div ng-if="recorder.isHtml5()">
+                <i>Using HTML5</i>
+            </div>
+            <div ng-if="!recorder.isHtml5()">
+                <i>Using Flash</i>
+            </div>
 
             <button ng-click="recorder.startRecord()" type="button" ng-disabled="recorder.status.isRecording">
                 Start Record
@@ -35,6 +42,7 @@
                 <ng-audio-recorder-analyzer></ng-audio-recorder-analyzer>
             </div>
             <br/>
+
             <div ng-show="!recorder.status.isRecording && recorder.audioModel">
                 <ng-audio-recorder-wave-view wave-color="yellow" bar-color="red"></ng-audio-recorder-wave-view>
             </div>
@@ -49,7 +57,11 @@
 
 
         <div ng-if="!recorder.isAvailable">
-            Your browser does not support this feature natively, please use latest version of <a href="https://www.google.com/chrome/browser" target="_blank">Google Chrome</a> or <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank">Mozilla Firefox</a>. If you're on Safari or Internet Explorer, you can install <a href="https://get.adobe.com/flashplayer/">Adobe Flash</a>  to use this feature.
+            Your browser does not support this feature natively, please use latest version of <a
+                href="https://www.google.com/chrome/browser" target="_blank">Google Chrome</a> or <a
+                href="https://www.mozilla.org/en-US/firefox/new/" target="_blank">Mozilla Firefox</a>. If you're on
+            Safari or Internet Explorer, you can install <a href="https://get.adobe.com/flashplayer/">Adobe Flash</a> to
+            use this feature.
         </div>
     </ng-audio-recorder>
 
