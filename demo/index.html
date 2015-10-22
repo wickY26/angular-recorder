@@ -4,10 +4,11 @@
     <title>Demo for Audio Recorder</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/e614a3990a5d422663df3f7c491ff52c7072d2ed/lib/html5-recorder.js"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/e614a3990a5d422663df3f7c491ff52c7072d2ed/lib/flash-recorder.js?v=20151021.1"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/e614a3990a5d422663df3f7c491ff52c7072d2ed/audio-recorder.js?v=20151021.1"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/c40a29e63d4e6f0e59ede2ae0e5d5e979263aac1/lib/html5-recorder.js"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/c40a29e63d4e6f0e59ede2ae0e5d5e979263aac1/lib/flash-recorder.js?v=20151021.1"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/c40a29e63d4e6f0e59ede2ae0e5d5e979263aac1/audio-recorder.js?v=20151021.1"></script>
     <script src="demo.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
     <style>
         canvas {
@@ -35,6 +36,7 @@
 
 
             <div class="panel panel-primary">
+
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <span ng-if="recorder.isHtml5()">
@@ -57,7 +59,13 @@
                                 {{recorder.elapsedTime >= 10 ? recorder.elapsedTime : ('0'+recorder.elapsedTime)}}
                             </h3>
 
-                            <div class="controls text-center" style="padding-top: 10px;">
+                            <div class="alert alert-danger" ng-if="recorder.status.isDenied === true">
+                                Permission to use your microphone was declined, please refresh this page to grant
+                                permission.
+                            </div>
+
+                            <div class="controls text-center" style="padding-top: 10px;"
+                                 ng-hide="recorder.status.isDenied === true">
                                 <button ng-click="recorder.status.isRecording ? recorder.stopRecord() : recorder.startRecord()"
                                         type="button" class="btn"
                                         ng-class="{'btn-primary': !recorder.status.isRecording, 'btn-danger': recorder.status.isRecording}">
