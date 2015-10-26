@@ -4,11 +4,12 @@
     <title>Demo for Audio Recorder</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/c40a29e63d4e6f0e59ede2ae0e5d5e979263aac1/lib/html5-recorder.js"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/c40a29e63d4e6f0e59ede2ae0e5d5e979263aac1/lib/flash-recorder.js?v=20151021.1"></script>
-    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/c40a29e63d4e6f0e59ede2ae0e5d5e979263aac1/audio-recorder.js?v=20151021.1"></script>
+    <script src="https://cdn.rawgit.com/katspaugh/wavesurfer.js/v1.0.46/dist/wavesurfer.min.js"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/2b55eb9f022abc3b6aab2899be3ee42c17e90602/lib/html5-recorder.js"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/2b55eb9f022abc3b6aab2899be3ee42c17e90602/lib/flash-recorder.js?v=20151021.1"></script>
+    <script src="https://cdn.rawgit.com/logbon72/angular-recorder/2b55eb9f022abc3b6aab2899be3ee42c17e90602/audio-recorder.js?v=20151021.1"></script>
     <script src="demo.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
     <style>
         canvas {
@@ -16,7 +17,6 @@
             background: #202020;
             width: 100%;
             /*height: 45%;*/
-            height: 300px;
             box-shadow: 0px 0px 10px blue;
         }
 
@@ -99,13 +99,18 @@
                     </div>
                     <br/>
 
+                    <div ng-if="recorder.status.isConverting">
+                        <p class="text-center">
+                            Please wait while we process your recording
+                        </p>
+                    </div>
                     <div class="panels" canvas-sizer>
                         <div ng-show="recorder.status.isRecording">
                             <ng-audio-recorder-analyzer></ng-audio-recorder-analyzer>
                         </div>
 
                         <div ng-show="!recorder.status.isRecording && recorder.audioModel">
-                            <ng-audio-recorder-wave-view wave-color="yellow"
+                            <ng-audio-recorder-wave-view wave-color="silver"
                                                          bar-color="red"></ng-audio-recorder-wave-view>
                         </div>
                     </div>
