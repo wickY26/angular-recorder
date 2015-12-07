@@ -72,11 +72,7 @@
 
         <div class="highlight highlight-text-html-basic"><pre><span
                 class="pl-c">&lt;!-- Somewhere on your page --&gt;</span>
-&lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>/path/to/audio-recorder/lib/html5-recorder.js<span
-                    class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;
-&lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>/path/to/audio-recorder/lib/flash-recorder.js<span
-                    class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;
-&lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>/path/to/audio-recorder/audio-recorder.js<span
+&lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>/path/to/angular-recorder/dist/angular-audio-recorder.min.js<span
                     class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;
 <span class="pl-c">&lt;!--- use if you want wave display !--&gt;</span>
 &lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>/path/to/wavesurfer/wavesurfer.min.js<span
@@ -85,7 +81,8 @@
 
         <p>Then add as a dependency to your project:</p>
 
-        <div class="highlight highlight-source-js"><pre>angular.module(<span class="pl-s"><span class="pl-pds">'</span>yourAppName<span
+        <div class="highlight highlight-source-js"><pre><span class="pl-smi">angular</span>.<span
+                class="pl-en">module</span>(<span class="pl-s"><span class="pl-pds">'</span>yourAppName<span
                 class="pl-pds">'</span></span>, [
     <span class="pl-c">//include other dependencies</span>
     <span class="pl-s"><span class="pl-pds">'</span>angularAudioRecorder<span class="pl-pds">'</span></span>
@@ -94,9 +91,10 @@
 
         <p>You can configure options using</p>
 
-        <div class="highlight highlight-source-js"><pre>angular.module(<span class="pl-s"><span class="pl-pds">'</span>yourAppName<span
+        <div class="highlight highlight-source-js"><pre><span class="pl-smi">angular</span>.<span
+                class="pl-en">module</span>(<span class="pl-s"><span class="pl-pds">'</span>yourAppName<span
                 class="pl-pds">'</span></span>)
-      .config([<span class="pl-s"><span class="pl-pds">'</span>recorderServiceProvider<span
+      .<span class="pl-en">config</span>([<span class="pl-s"><span class="pl-pds">'</span>recorderServiceProvider<span
                     class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">recorderServiceProvider</span>){
         <span class="pl-c">//configure here</span>
       }]);</pre>
@@ -259,6 +257,10 @@
             <li><code>on-conversion-complete</code>: callback to execute when MP3 conversion is completed</li>
             <li><code>convert-mp3</code>: Specifies if MP3 conversion should be done for this particular element, it
                 overrides whatever was specified for <code>recorderServiceProvider.withMp3Conversion()</code></li>
+            <li><code>time-limit</code> (Number, optional): specifes the time limit for the audio input, the recording
+                will be
+                automatically stopped when this limit is reached. Must be a number greater than 0.
+            </li>
         </ul>
 
         <h3><a id="user-content-controller-ngaudiorecordercontroller" class="anchor"
