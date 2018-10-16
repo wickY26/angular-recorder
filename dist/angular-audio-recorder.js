@@ -95,18 +95,21 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
     },
     shouldConvertToMp3 = angular.isDefined(control.convertMp3) ? !!control.convertMp3 : service.shouldConvertToMp3(),
     mp3Converter = shouldConvertToMp3 ? new MP3Converter(service.getMp3Config()) : null;
-  ;
 
-
-  control.timeLimit = control.timeLimit || 0;
-  control.status = createReadOnlyVersion(status);
-  control.isAvailable = service.isAvailable();
-  control.elapsedTime = 0;
-  //Sets ID for the element if ID doesn't exists
-  if (!control.id) {
-    control.id = recorderUtils.generateUuid();
-    element.attr("id", control.id);
-  }
+    // initialize controller
+    this.$onInit = function () {
+        control.timeLimit = control.timeLimit || 0;
+        control.status = createReadOnlyVersion(status);
+        control.isAvailable = service.isAvailable();
+        control.elapsedTime = 0;
+        //Sets ID for the element if ID doesn't exists
+        if (!control.id) {
+            control.id = recorderUtils.generateUuid();
+            element.attr("id", control.id);
+        }
+        //register controller with service
+        service.setController(control.id, this);
+    };
 
 
   if (!service.isHtml5 && !service.isCordova) {
@@ -117,10 +120,6 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
       status.isSwfLoaded = n;
     });
   }
-
-
-  //register controller with service
-  service.setController(control.id, this);
 
   var playbackOnEnded = function () {
     status.playback = PLAYBACK.STOPPED;
